@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { Register } from "../Validators/RgisterValidator";
+import { Register } from "../Validators/RegisterValidator";
 import User from "../Models/User";
 import bcrypt from "bcrypt";
-import { CreateToken } from "../Utils/CreatToken";
+import { CreateToken } from "../Utils/CreateToken";
 import { AppError } from "../Utils/AppError";
 import UserDTO from "../Dto/UserDTO";
 import { isValidObjectId } from "mongoose";

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../Utils/AppError";
-import { verifyToken } from "../Utils/CreatToken";
+import { verifyToken } from "../Utils/CreateToken";
 import User from "../Models/User";
 
 export class AuthMiddleware {

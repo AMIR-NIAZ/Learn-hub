@@ -1,5 +1,5 @@
 import { UserRouter } from "./Routes/UserRouter";
-import { errorHelper } from "./Utils/ErorHandling";
+import { errorHelper } from "./Utils/ErrorHandling";
 
 const express = require("express");
 type Application = import("express").Application;
