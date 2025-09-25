@@ -52,7 +52,7 @@ export class UserController {
             throw new AppError("email is not find", 401)
         }
 
-        let isPasswordValidation = await bcrypt.compare(password, user.password)
+        let isPasswordValidation = await bcrypt.compare(password, user.password!)
         if (!isPasswordValidation) {
             throw new AppError("password is not valid", 401)
         }
@@ -88,11 +88,11 @@ export class UserController {
             .lean();
         const userDtos = UserDTO.fromUsers(allUser);
 
-        return res.status(200).json({ success: true, users: userDtos.map(u => u.toObject())})
+        return res.status(200).json({ success: true, users: userDtos.map(u => u.toObject()) })
     }
 
     static async getOneUser(req: Request, res: Response) {
-                const id = req.params.id;
+        const id = req.params.id;
 
         if (!isValidObjectId(id)) {
             throw new AppError("id is not true", 422);
@@ -104,5 +104,11 @@ export class UserController {
         }
         const userDto = UserDTO.fromUser(user)
         return res.status(200).json({ user: userDto.toObject() })
+    }
+
+    static async addAdmin(req: Request, res: Response) {
+        const id = req.params.id;
+
+        const user = User.findByValidId(id ? id : "")
     }
 }

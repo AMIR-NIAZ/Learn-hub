@@ -1,7 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 
-const { Router } = require("express");
-type Router = import("express").Router;
 export abstract class BaseRouter {
   protected router: Router;
 

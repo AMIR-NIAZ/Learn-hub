@@ -1,9 +1,4 @@
-// dtos/BaseDTO.ts
-export interface BaseEntity {
-  _id: any;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { BaseEntity } from "../Interfaces/BaseEntity";
 
 export abstract class BaseDTO<T> {
   public id: any;

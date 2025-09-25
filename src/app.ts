@@ -1,10 +1,8 @@
 import { UserRouter } from "./Routes/UserRouter";
 import { errorHelper } from "./Utils/ErrorHandling";
-
-const express = require("express");
-type Application = import("express").Application;
-const cors = require("cors");
-const { Logger } = require("./Utils/logger");
+import express, { Application } from "express";
+import cors from "cors";
+import { Logger } from "./Utils/logger";
 
 export class App {
     public app: Application

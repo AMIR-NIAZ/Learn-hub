@@ -1,4 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId, Types } from "mongoose";
+import { AppError } from "../Utils/AppError";
+import { IUser } from "../Interfaces/IUser";
+import { IUserModel } from "../Interfaces/IUserModel";
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -21,5 +24,17 @@ const UserSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-const User = mongoose.model("user", UserSchema)
+
+UserSchema.statics.findByValidId = async function (id: string) {
+    if (!isValidObjectId(id)) {
+        throw new AppError("id is not true", 422);
+    }
+
+    const user = await User.findById(id).lean();
+    if (!user) {
+        throw new AppError("user not found", 404);
+    }
+};
+
+const User = mongoose.model<IUser, IUserModel>("user", UserSchema)
 export default User

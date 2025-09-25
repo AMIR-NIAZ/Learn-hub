@@ -1,11 +1,5 @@
-import { BaseEntity, BaseDTO } from './BaseDTO';
-
-export interface IUser extends BaseEntity {
-    name: string;
-    email: string;
-    role: string;
-    password?: string;
-}
+import { IUser } from '../Interfaces/IUser';
+import { BaseDTO } from './BaseDTO';
 
 export class UserDTO extends BaseDTO<IUser> {
     public name: string;

@@ -23,5 +23,11 @@ export class UserRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(UserController.banUser)
         );
+
+        this.router.post("/admin/:id",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(UserController.addAdmin)
+        );
     }
 }
