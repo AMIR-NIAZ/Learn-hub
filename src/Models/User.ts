@@ -25,15 +25,17 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UserSchema.statics.findByValidId = async function (id: string) {
+UserSchema.statics.findByValidId = async function (id: string, useLean = true) {
     if (!isValidObjectId(id)) {
         throw new AppError("id is not true", 422);
     }
+    const query = this.findById(id);
+    const user = useLean ? await query.lean() : await query;
 
-    const user = await User.findById(id).lean();
     if (!user) {
         throw new AppError("user not found", 404);
     }
+    return user;
 };
 
 const User = mongoose.model<IUser, IUserModel>("user", UserSchema)
