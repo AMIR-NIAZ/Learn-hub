@@ -31,7 +31,7 @@ export class UserController {
     }
 
     static async loginUser(req: Request, res: Response) {
-        const { email, password } = req.body    
+        const { email, password } = req.body
         await UserController.Validation(req)
         const isBan = await Ban.exists({ email });
         if (isBan) throw new AppError("user is ban", 409)
@@ -56,9 +56,9 @@ export class UserController {
         const { id } = req.params;
         const user = await User.findByValidId(id!, false);
         await UserController.Validation(req);
-        user.name = name;
+        await user.updateOne({ name });
         return res.status(200).json({
-            success: true, 
+            success: true,
             message: "data user updated successfull"
         })
     }

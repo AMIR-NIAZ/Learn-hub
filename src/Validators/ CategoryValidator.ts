@@ -6,7 +6,7 @@ export class  CategoryValidator extends ParentValidator {
         return {
             title: {
                 type: "string",
-                min: 5,
+                min: 2,
                 max: 100
             },
             name: {
