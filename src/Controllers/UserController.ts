@@ -56,9 +56,17 @@ export class UserController {
             throw new AppError("password is not valid", 401)
         }
 
+        const userResource = UserDTO.fromUser(user)
         const token = CreateToken(user);
 
-        return res.status(200).json({ success: true, user, token })
+        res.status(201).json({
+            success: true,
+            message: "User logined successfully",
+            data: {
+                user: userResource.toObject(),
+                token
+            }
+        });
     }
 
     static async banUser(req: Request, res: Response) {
@@ -66,7 +74,7 @@ export class UserController {
         const user = await User.findByValidId(id!);
 
         if (user.role === "ADMIN") throw new AppError("cant ban admin", 403);
-        
+
         await Ban.create({ email: user.email });
 
         return res.json({ success: true });
