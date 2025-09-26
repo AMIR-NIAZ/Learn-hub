@@ -20,7 +20,7 @@ export class CategoryController {
         await Category.create({ title, name })
         res.status(201).json({
             success: true,
-            message: "User registered successfully",
+            message: "Category Created successfully",
         })
     }
 }

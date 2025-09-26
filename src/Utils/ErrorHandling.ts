@@ -4,6 +4,6 @@ export const errorHelper: ErrorRequestHandler = (err, req: Request, res: Respons
     console.log("Global error handler:", err.message);
 
     const status = (err as any).statusCode || 500;
-    res.status(status).json({ success: false, error: err.message || "Something went wrong" });
+    res.status(status).json({ success: false, error: JSON.parse(err.message) || "Something went wrong" });
 };
 
