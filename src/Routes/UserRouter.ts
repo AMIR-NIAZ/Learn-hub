@@ -9,6 +9,9 @@ export class UserRouter extends BaseRouter {
         this.router.post("/login",
             this.handleErrors(UserController.loginUser)
         );
+        this.router.put("/update/:id", 
+            this.handleErrors(UserController.updateUser)
+        )
         this.router.get("/get",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isAdmin),
@@ -22,7 +25,6 @@ export class UserRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(UserController.banUser)
         );
-
         this.router.get("/admin/:id",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isAdmin),
