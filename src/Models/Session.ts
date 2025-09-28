@@ -7,12 +7,13 @@ const SessionSchema = new mongoose.Schema(
             required: true,
         },
         time: {
-            type: String,
+            type: Number,
             required: true,
         },
         free: {
-            type: Number,
+            type: Boolean,
             required: true,
+            default: true
         },
         video: {
             type: String,
