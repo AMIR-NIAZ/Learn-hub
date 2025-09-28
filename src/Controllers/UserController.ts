@@ -87,11 +87,23 @@ export class UserController {
 
     static async addAdmin(req: any, res: Response) {
         const id = req.params.id;
-        const user = await User.findByValidId(id!, false)
+        const user = await User.findByValidId(id!, false);
         if (user._id.toString() === req.user._id.toString()) throw new AppError("Admins are not allowed to change their own role.", 403)
         const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
         await user.updateOne({ role: newRole });
         return res.status(200).json({ success: true, message: "change role" })
+    }
+
+    static async addTeacher(req: any, res: Response) {
+        const id = req.params.id;
+        const user = await User.findByValidId(id!, false);
+        if (user._id.toString() === req.user._id.toString()) throw new AppError("You cannot change your own role.", 403);
+        const newRole = user.role === "TEACHER" ? "USER" : "TEACHER";
+        await user.updateOne({ role: newRole });
+        return res.status(200).json({
+            success: true,
+            message: `Role changed to ${newRole}`
+        });
     }
 
     private static async Validation(req: Request) {
