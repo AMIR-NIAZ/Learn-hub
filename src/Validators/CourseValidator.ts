@@ -30,6 +30,7 @@ export class CourseValidator extends ParentValidator {
             },
             time: {
                 type: "number",
+                default: 0,
                 positive: true,
                 integer: true,
                 optional: false,

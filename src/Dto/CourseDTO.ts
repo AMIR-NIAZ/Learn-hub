@@ -31,7 +31,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
         this.href = course.href;
         this.teacher = UserDTO.fromUser(course.teacher as IUser);
         this.category = CategoryDTO.fromcategory(course.category as ICategory);
-        this.sessions = course.sessions ?? [];
+        this.sessions = course.sessions;
     }
 
     static fromCourse(course: ICourse): CourseDTO {
@@ -55,7 +55,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
             href: this.href,
             teacher: this.teacher.toObject(),
             category: this.category.toObject(),
-            sessions: this.sessions ?? [],
+            sessions: this.sessions,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

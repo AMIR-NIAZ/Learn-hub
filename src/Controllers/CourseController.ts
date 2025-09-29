@@ -17,7 +17,6 @@ export class CourseController {
             description,
             price,
             status,
-            time,
             href,
             category
         } = req.body;
@@ -33,7 +32,7 @@ export class CourseController {
             description,
             price,
             status,
-            time,
+            time: 0,
             lastUpdate: persianDate,
             href,
             category,
@@ -98,7 +97,6 @@ export class CourseController {
             description,
             price,
             status,
-            time,
             href,
             category
         } = req.body;
@@ -118,7 +116,6 @@ export class CourseController {
             description,
             price,
             status,
-            time,
             href,
             category
         })
@@ -150,8 +147,18 @@ export class CourseController {
             video,
             time: Math.floor(duration)
         })
+        CourseController.ChengTime(id!, Math.floor(duration))
         return res.status(201).json({ success: true, session })
     }
+
+    private static async ChengTime(id: string, time: number) {
+        return await Course.findByIdAndUpdate(
+            id,
+            { $inc: { time: time } },
+            { new: true }
+        );
+    }
+
 
     private static async Validation(req: Request) {
         const validator = new CourseValidator();
