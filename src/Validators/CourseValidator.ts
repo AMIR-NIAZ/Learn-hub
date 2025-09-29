@@ -20,7 +20,8 @@ export class CourseValidator extends ParentValidator {
                 type: "number",
                 positive: true,
                 integer: false,
-                optional: false
+                optional: false,
+                convert: true
             },
             status: {
                 type: "enum",
@@ -31,14 +32,15 @@ export class CourseValidator extends ParentValidator {
                 type: "number",
                 positive: true,
                 integer: true,
-                optional: false
+                optional: false,
+                convert: true
             },
             href: {
                 type: "string",
                 min: 5,
                 max: 255,
                 optional: false,
-                pattern: /^https?:\/\/.+$/,
+                pattern: /^[a-zA-Z0-9_-]+$/,
             },
             category: {
                 type: "string",

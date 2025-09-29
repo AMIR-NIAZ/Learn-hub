@@ -38,5 +38,5 @@ UserSchema.statics.findByValidId = async function (id: string, useLean = true) {
     return user;
 };
 
-const User = mongoose.model<IUser, IUserModel>("user", UserSchema)
+const User = mongoose.model<IUser, IUserModel>("User", UserSchema)
 export default User
