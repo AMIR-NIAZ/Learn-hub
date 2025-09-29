@@ -44,6 +44,8 @@ const CourseSchema = new mongoose.Schema({
         required: true
     }
 }, { timestamps: true });
+CourseSchema.set("toObject", { virtuals: true });
+CourseSchema.set("toJSON", { virtuals: true });
 
 CourseSchema.virtual("sessions", {
     ref: "Session",

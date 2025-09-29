@@ -21,11 +21,11 @@ function fileFilter(req: any, file: Express.Multer.File, callback: any) {
     }
     callback(null, true);
 }
-const Uploder = multer({
+const UploderCover = multer({
     storage,
     fileFilter,
     limits: {
         fileSize: 1024 * 1024 * 5
     }
 })
-export default Uploder;
+export default UploderCover;

@@ -1,6 +1,7 @@
 import { CourseController } from "../Controllers/CourseController";
 import { AuthMiddleware } from "../Middlewares/AuthMiddleware";
-import Uploder from "../Utils/Uploder";
+import UploderCover from "../Utils/Uploder";
+import UploderSession from "../Utils/UploderSession";
 import { BaseRouter } from "./BaseRouter";
 
 export class CourseRouter extends BaseRouter {
@@ -8,7 +9,7 @@ export class CourseRouter extends BaseRouter {
         this.router.post("/create",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isTeacher),
-            Uploder.single("avatar"),
+            UploderCover.single("avatar"),
             this.handleErrors(CourseController.CreateCourse)
         );
         this.router.get("/",
@@ -20,13 +21,19 @@ export class CourseRouter extends BaseRouter {
         this.router.put("/:id",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isTeacherORAdmin),
-            Uploder.single("avatar"),
+            UploderCover.single("avatar"),
             this.handleErrors(CourseController.UpdateCourse)
         );
         this.router.delete("/:id",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isTeacherORAdmin),
             this.handleErrors(CourseController.DeleteCourse)
+        );
+        this.router.post("/:id/session",
+            this.handleErrors(AuthMiddleware.isUser),
+            // this.handleErrors(AuthMiddleware.isTeacher),
+            UploderSession.single("video"),
+            this.handleErrors(CourseController.CreateSession)
         );
     }
 }

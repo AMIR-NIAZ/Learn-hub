@@ -6,6 +6,9 @@ import Course from "../Models/Course";
 import moment from "moment-jalaali";
 import CourseDTO from "../Dto/CourseDTO";
 import { isValidObjectId } from "mongoose";
+import fs from "fs";
+import getVideoDurationInSeconds from "get-video-duration";
+import Session from "../Models/Session";
 
 export class CourseController {
     static async CreateCourse(req: Request, res: Response) {
@@ -19,6 +22,7 @@ export class CourseController {
             category
         } = req.body;
         const avatar = (req as any).file.filename;
+        if (!avatar) throw new AppError("Avatar is required", 400);
         const categoryExists = await Category.findById(category).lean();
         if (!categoryExists) throw new AppError("Category not found", 404);
         await CourseController.Validation(req);
@@ -56,7 +60,10 @@ export class CourseController {
     static async getCourseById(req: Request, res: Response) {
         const { id } = req.params;
         if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
-        const mainCourse = await Course.findById(id).populate("teacher").populate("category")
+        const mainCourse = await Course.findById(id)
+            .populate("teacher")
+            .populate("category")
+            .populate("sessions");
         if (!mainCourse) {
             throw new AppError("Course not found", 404);
         }
@@ -119,6 +126,31 @@ export class CourseController {
             success: true,
             message: "Course updated successfully"
         });
+    }
+
+    static async CreateSession(req: Request, res: Response) {
+        const {
+            title,
+            free,
+        } = req.body;
+        const { id } = req.params;
+        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
+        const isCourse = await Course.exists({ _id: id });
+        if (!isCourse) throw new AppError("Course not find", 404);
+        const video = (req as any).file.filename;
+        if (!video) throw new AppError("Video is required", 400);
+        const filePath = (req as any).file.path;
+        const duration = await getVideoDurationInSeconds(
+            fs.createReadStream(filePath)
+        );
+        const session = await Session.create({
+            title,
+            free,
+            course: id,
+            video,
+            time: Math.floor(duration)
+        })
+        return res.status(201).json({ success: true, session })
     }
 
     private static async Validation(req: Request) {

@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 import { IUser } from "./IUser";
 import { ICategory } from "./ICategory";
+import { ISession } from "./ISession";
 
 export interface ICourse extends Document {
     avatar: string;
@@ -13,6 +14,7 @@ export interface ICourse extends Document {
     href: string;
     teacher: Types.ObjectId | IUser;
     category: Types.ObjectId | ICategory;
+    sessions?: ISession[];
     createdAt: Date;
     updatedAt: Date;
 }

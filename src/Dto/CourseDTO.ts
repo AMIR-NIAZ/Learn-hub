@@ -4,6 +4,7 @@ import UserDTO from "./UserDTO";
 import CategoryDTO from "./CategoryDTO";
 import { IUser } from "../Interfaces/IUser";
 import { ICategory } from "../Interfaces/ICategory";
+import { ISession } from "../Interfaces/ISession";
 
 export class CourseDTO extends BaseDTO<ICourse> {
     public avatar: string;
@@ -16,6 +17,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
     public href: string;
     public teacher: UserDTO;
     public category: CategoryDTO;
+    public sessions?: ISession[] | undefined;
 
     constructor(course: ICourse) {
         super(course);
@@ -29,6 +31,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
         this.href = course.href;
         this.teacher = UserDTO.fromUser(course.teacher as IUser);
         this.category = CategoryDTO.fromcategory(course.category as ICategory);
+        this.sessions = course.sessions ?? [];
     }
 
     static fromCourse(course: ICourse): CourseDTO {
@@ -52,6 +55,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
             href: this.href,
             teacher: this.teacher.toObject(),
             category: this.category.toObject(),
+            sessions: this.sessions ?? [],
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

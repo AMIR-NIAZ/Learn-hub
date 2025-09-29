@@ -17,6 +17,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "fastest-validator": "^1.19.1",
+    "get-video-duration": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "moment-jalaali": "^0.10.4",
     "mongoose": "^8.18.0",
