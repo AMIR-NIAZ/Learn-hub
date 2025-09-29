@@ -73,7 +73,9 @@ export class CourseController {
         }
         const teacherId = (mainCourse.teacher as any)._id.toString();
         const userId = (req as any).user._id.toString();
-        if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
+        if ((req as any).user.role !== "ADMIN") {
+            if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
+        }
         await mainCourse.deleteOne();
         return res.status(200).json({
             success: true,
@@ -101,7 +103,9 @@ export class CourseController {
         }
         const teacherId = (mainCourse.teacher as any).toString();
         const userId = (req as any).user._id.toString();
-        if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
+        if ((req as any).user.role !== "ADMIN") {
+            if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
+        }
         await mainCourse.updateOne({
             title,
             description,

@@ -19,13 +19,13 @@ export class CourseRouter extends BaseRouter {
         );
         this.router.put("/:id",
             this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isTeacher),
+            this.handleErrors(AuthMiddleware.isTeacherORAdmin),
             Uploder.single("avatar"),
             this.handleErrors(CourseController.UpdateCourse)
         );
         this.router.delete("/:id",
             this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isTeacher),
+            this.handleErrors(AuthMiddleware.isTeacherORAdmin),
             this.handleErrors(CourseController.DeleteCourse)
         );
     }
