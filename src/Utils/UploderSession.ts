@@ -15,10 +15,9 @@ const storage = multer.diskStorage({
 function fileFilter(req: any, file: Express.Multer.File, callback: any) {
     const allowedExt = "mp4";
     const ext = path.extname(file.originalname).toLowerCase();
-
-    // if (ext !== allowedExt) {
-    //     return callback(new AppError("Unsupported file type", 422));
-    // }
+    if (ext !== allowedExt) {
+        return callback(new AppError("Unsupported file type", 422));
+    }
     callback(null, true);
 }
 const UploderSession = multer({

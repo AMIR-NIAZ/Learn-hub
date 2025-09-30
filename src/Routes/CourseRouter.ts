@@ -31,9 +31,14 @@ export class CourseRouter extends BaseRouter {
         );
         this.router.post("/:id/session",
             this.handleErrors(AuthMiddleware.isUser),
-            // this.handleErrors(AuthMiddleware.isTeacher),
+            this.handleErrors(AuthMiddleware.isTeacher),
             UploderSession.single("video"),
             this.handleErrors(CourseController.CreateSession)
+        );
+        this.router.delete("/:CourseId/session/:SessionId",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isTeacher),
+            this.handleErrors(CourseController.DeleteSession)
         );
     }
 }

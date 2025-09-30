@@ -9,6 +9,7 @@ import { isValidObjectId } from "mongoose";
 import fs from "fs";
 import getVideoDurationInSeconds from "get-video-duration";
 import Session from "../Models/Session";
+import path from "path";
 
 export class CourseController {
     static async CreateCourse(req: Request, res: Response) {
@@ -109,7 +110,7 @@ export class CourseController {
         const teacherId = (mainCourse.teacher as any).toString();
         const userId = (req as any).user._id.toString();
         if ((req as any).user.role !== "ADMIN") {
-            if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
+            if (teacherId !== userId) throw new AppError("Teacher cannot update this course", 403);
         }
         await mainCourse.updateOne({
             title,
@@ -147,18 +148,44 @@ export class CourseController {
             video,
             time: Math.floor(duration)
         })
-        CourseController.ChengTime(id!, Math.floor(duration))
+        CourseController.UpdateCourseTime(id!, Math.floor(duration))
         return res.status(201).json({ success: true, session })
     }
 
-    private static async ChengTime(id: string, time: number) {
+    static async DeleteSession(req: Request, res: Response) {
+        const { CourseId, SessionId } = req.params;
+        if (!isValidObjectId(CourseId) || !isValidObjectId(SessionId)) {
+            throw new AppError("id is not true", 422);
+        }
+        const mainCourse = await Course.findById(CourseId);
+        if (!mainCourse) throw new AppError("Course not found", 404);
+        if ((req as any).user.role !== "ADMIN") {
+            const teacherId = (mainCourse.teacher as any)._id.toString();
+            const userId = (req as any).user._id.toString();
+            if (teacherId !== userId) {
+                throw new AppError("Teacher cannot delete this course", 403);
+            }
+        }
+        const session = await Session.findByIdAndDelete(SessionId).lean();
+        if (!session) throw new AppError("Session not found", 404);
+        if (session.course?.toString() !== CourseId) throw new AppError("Session does not belong to this course", 400);
+        await CourseController.UpdateCourseTime(CourseId!, session.time * -1);
+        if (session.video) {
+            fs.unlinkSync(path.join(__dirname, "..", "public", "course", "Sessions", session.video));
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Session deleted successfully"
+        });
+    }
+
+    private static async UpdateCourseTime(id: string, time: number) {
         return await Course.findByIdAndUpdate(
             id,
             { $inc: { time: time } },
             { new: true }
         );
     }
-
 
     private static async Validation(req: Request) {
         const validator = new CourseValidator();

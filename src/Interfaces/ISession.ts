@@ -6,5 +6,5 @@ export interface ISession extends BaseEntity {
     time: Number;
     free: Boolean;
     video: String;
-    course?: Types.ObjectId;
+    course: Types.ObjectId;
 }
