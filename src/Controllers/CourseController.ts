@@ -10,6 +10,8 @@ import fs from "fs";
 import getVideoDurationInSeconds from "get-video-duration";
 import Session from "../Models/Session";
 import path from "path";
+import { CommentValidator } from "../Validators/CommentValidator";
+import Comment from "../Models/Comment";
 
 export class CourseController {
     static async CreateCourse(req: Request, res: Response) {
@@ -25,7 +27,7 @@ export class CourseController {
         if (!avatar) throw new AppError("Avatar is required", 400);
         const categoryExists = await Category.findById(category).lean();
         if (!categoryExists) throw new AppError("Category not found", 404);
-        await CourseController.Validation(req);
+        await CourseController.ValidationCourse(req);
         const gregorianDate = new Date();
         const persianDate = moment(gregorianDate).format("jYYYY/jMM/jDD");
         const course = await Course.create({
@@ -101,7 +103,7 @@ export class CourseController {
             href,
             category
         } = req.body;
-        await CourseController.Validation(req)
+        await CourseController.ValidationCourse(req)
         const mainCourse = await Course.findById(id);
         console.log(mainCourse);
         if (!mainCourse) {
@@ -179,6 +181,24 @@ export class CourseController {
         });
     }
 
+    public static async CreateComment(req: Request, res: Response) {
+        const { body, score, parent } = req.body;
+        const { href } = req.params;
+        if (parent) {
+            if (!isValidObjectId(parent)) throw new AppError("parent is not valid", 422);
+        }
+        CourseController.ValidationComment({ body, score, parent, href });
+        const course = await Course.findOne({ href }).select("_id");
+        if (!course) throw new AppError("Course not found", 404);
+        const comment = await Comment.create({
+            body,
+            course: course._id,
+            user: (req as any).user._id,
+            parent: parent || null,
+        });
+        res.status(201).json({ success: true, comment });
+    }
+
     private static async UpdateCourseTime(id: string, time: number) {
         return await Course.findByIdAndUpdate(
             id,
@@ -187,9 +207,15 @@ export class CourseController {
         );
     }
 
-    private static async Validation(req: Request) {
+    private static async ValidationCourse(req: Request) {
         const validator = new CourseValidator();
         const errors = await validator.validate(req.body);
+        if (errors) throw new AppError(JSON.stringify(errors), 422);
+    }
+
+    private static async ValidationComment(item: any) {
+        const validator = new CommentValidator();
+        const errors = await validator.validate(item);
         if (errors) throw new AppError(JSON.stringify(errors), 422);
     }
 }

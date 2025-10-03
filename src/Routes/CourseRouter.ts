@@ -40,5 +40,8 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isTeacher),
             this.handleErrors(CourseController.DeleteSession)
         );
+        this.router.post("/:href/comment",
+            this.handleErrors(CourseController.CreateComment)
+        );
     }
 }
