@@ -44,5 +44,23 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(CourseController.CreateComment)
         );
+        this.router.get("/comment/notactive",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(CourseController.GetAllNotActiveComments)
+        );
+        this.router.put("/comment/active/:id",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(CourseController.activeComment)
+        );
+        this.router.delete("/comment/:id",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(CourseController.deleteComment)
+        );
+        this.router.get("/:href/comment",
+            this.handleErrors(CourseController.getAllCommentByCourse)
+        );
     }
 }

@@ -10,13 +10,6 @@ export class CommentValidator extends ParentValidator {
                 max: 5000,
                 optional: false
             },
-            course: {
-                type: "string",
-                required: true,
-                min: 24,
-                max: 24,
-                optional: false,
-            },
             isActive: {
                 type: "boolean",
                 optional: true,

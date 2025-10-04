@@ -189,9 +189,10 @@ export class CourseController {
         }
         const course = await Course.findOne({ href: href });
         if (!course) throw new AppError("Course not found", 404);
-        CourseController.ValidationComment({ body, score, parent, course });
+        CourseController.ValidationComment({ body, score, parent });
         const comment = await Comment.create({
             body,
+            score: score || 5,
             course: course._id,
             user: (req as any).user._id,
             parent: parent || null,
@@ -207,18 +208,48 @@ export class CourseController {
         );
     }
 
-    public static async GetAllActiveComments(req: Request, res: Response) {
-            const comments = await Comment.find({ status: "active" })
-                .populate("user", "name avatar")
-                .populate("course", "title href")
-                .populate("parent", "body") 
-                .sort({ createdAt: -1 })
+    public static async GetAllNotActiveComments(req: Request, res: Response) {
+        const comments = await Comment.find({ isActive: false })
+            .populate("user", "name avatar")
+            .populate("course", "title href")
+            .populate("parent", "body")
+            .sort({ createdAt: -1 })
+        res.status(200).json({
+            success: true,
+            count: comments.length,
+            comments,
+        });
+    }
 
-            res.status(200).json({
-                success: true,
-                count: comments.length,
-                comments,
-            });
+    public static async activeComment(req: Request, res: Response) {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
+        const comment = await Comment.findById(id);
+        if (!comment) throw new AppError("comment not find", 404);
+        await comment.updateOne({ isActive: true });
+        res.status(200).json({
+            success: true,
+            message: "Comment is Active",
+        });
+    }
+
+    public static async deleteComment(req: Request, res: Response) {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
+        const comment = await Comment.findById(id);
+        if (!comment) throw new AppError("comment not find", 404);
+        await comment.deleteOne();
+        res.status(200).json({
+            success: true,
+            message: "Comment deleted successfully",
+        });
+    }
+
+    public static async getAllCommentByCourse(req: Request, res: Response) {
+        const { href } = req.params;
+        const comments = await Course.findOne({ href }).populate("comments").lean();
+        if (!comments) throw new AppError("comment not found", 404);
+        return res.status(200).json({ success: true, data: comments });
     }
 
     private static async ValidationCourse(req: Request) {
