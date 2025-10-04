@@ -12,12 +12,7 @@ export class CommentValidator extends ParentValidator {
             },
             course: {
                 type: "string",
-                min: 24,
-                max: 24,
-                optional: false,
-            },
-            user: {
-                type: "string",
+                required: true,
                 min: 24,
                 max: 24,
                 optional: false,

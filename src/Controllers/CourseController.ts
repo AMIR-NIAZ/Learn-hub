@@ -187,9 +187,9 @@ export class CourseController {
         if (parent) {
             if (!isValidObjectId(parent)) throw new AppError("parent is not valid", 422);
         }
-        CourseController.ValidationComment({ body, score, parent, href });
-        const course = await Course.findOne({ href }).select("_id");
+        const course = await Course.findOne({ href: href });
         if (!course) throw new AppError("Course not found", 404);
+        CourseController.ValidationComment({ body, score, parent, course });
         const comment = await Comment.create({
             body,
             course: course._id,
@@ -205,6 +205,20 @@ export class CourseController {
             { $inc: { time: time } },
             { new: true }
         );
+    }
+
+    public static async GetAllActiveComments(req: Request, res: Response) {
+            const comments = await Comment.find({ status: "active" })
+                .populate("user", "name avatar")
+                .populate("course", "title href")
+                .populate("parent", "body") 
+                .sort({ createdAt: -1 })
+
+            res.status(200).json({
+                success: true,
+                count: comments.length,
+                comments,
+            });
     }
 
     private static async ValidationCourse(req: Request) {
