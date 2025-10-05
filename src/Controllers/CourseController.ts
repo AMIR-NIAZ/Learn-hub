@@ -12,6 +12,7 @@ import Session from "../Models/Session";
 import path from "path";
 import { CommentValidator } from "../Validators/CommentValidator";
 import Comment from "../Models/Comment";
+import CourseUser from "../Models/CourseUser";
 
 export class CourseController {
     static async CreateCourse(req: Request, res: Response) {
@@ -251,6 +252,26 @@ export class CourseController {
         if (!comments) throw new AppError("comment not found", 404);
         return res.status(200).json({ success: true, data: comments });
     }
+
+    public static async registerUser(req: Request, res: Response) {
+        const isUserRegister = await CourseUser
+            .findOne({
+                user: (req as any).user._id,
+                course: req.params.id,
+            }).lean();
+        if (isUserRegister) throw new AppError("User already registered in the course", 409);
+        await CourseUser.create({
+            user: (req as any).user._id,
+            course: req.params.id,
+            price: req.body.price
+        })
+        res.status(201).json({
+            success: true,
+            message: "User register successfully",
+        });
+
+    }
+
 
     private static async ValidationCourse(req: Request) {
         const validator = new CourseValidator();

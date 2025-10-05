@@ -62,5 +62,9 @@ export class CourseRouter extends BaseRouter {
         this.router.get("/:href/comment",
             this.handleErrors(CourseController.getAllCommentByCourse)
         );
+        this.router.post("/register/:id",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(CourseController.registerUser)
+        );
     }
 }
