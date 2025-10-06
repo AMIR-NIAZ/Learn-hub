@@ -66,12 +66,21 @@ export class CourseController {
         const mainCourse = await Course.findById(id)
             .populate("teacher")
             .populate("category")
+            .populate({
+                path: "comments",
+                match: { isActive: true },
+                populate: { path: "user", select: "name" },
+                options: { sort: { createdAt: -1 } }
+            })
             .populate("sessions");
-        if (!mainCourse) {
-            throw new AppError("Course not found", 404);
-        }
+        if (!mainCourse) throw new AppError("Course not found", 404);
+        const countUser = await CourseUser.countDocuments({course: mainCourse._id});
         const DtoCourse = CourseDTO.fromCourse(mainCourse);
-        return res.status(201).json({ success: true, course: DtoCourse.toObject() });
+        const isUserRegisterToThisCourse = !!(await CourseUser.find({
+            user: (req as any).user._id,
+            course: mainCourse._id
+        }));
+        return res.status(201).json({ success: true, course: DtoCourse.toObject(), countStudent: countUser, isUserRegisterToThisCourse });
     }
 
     static async DeleteCourse(req: Request, res: Response) {

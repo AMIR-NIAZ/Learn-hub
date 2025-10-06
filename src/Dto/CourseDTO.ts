@@ -5,6 +5,7 @@ import CategoryDTO from "./CategoryDTO";
 import { IUser } from "../Interfaces/IUser";
 import { ICategory } from "../Interfaces/ICategory";
 import { ISession } from "../Interfaces/ISession";
+import { IComment } from "../Interfaces/IComment";
 
 export class CourseDTO extends BaseDTO<ICourse> {
     public avatar: string;
@@ -15,9 +16,10 @@ export class CourseDTO extends BaseDTO<ICourse> {
     public time: number;
     public lastUpdate: string;
     public href: string;
-    public teacher: UserDTO;
-    public category: CategoryDTO;
+    public teacher?: UserDTO;
+    public category?: CategoryDTO;
     public sessions?: ISession[] | undefined;
+    public comments?: IComment[] | undefined;
 
     constructor(course: ICourse) {
         super(course);
@@ -32,6 +34,7 @@ export class CourseDTO extends BaseDTO<ICourse> {
         this.teacher = UserDTO.fromUser(course.teacher as IUser);
         this.category = CategoryDTO.fromcategory(course.category as ICategory);
         this.sessions = course.sessions;
+        this.comments = course.comments;
     }
 
     static fromCourse(course: ICourse): CourseDTO {
@@ -53,9 +56,10 @@ export class CourseDTO extends BaseDTO<ICourse> {
             time: this.time,
             lastUpdate: this.lastUpdate,
             href: this.href,
-            teacher: this.teacher.toObject(),
-            category: this.category.toObject(),
+            teacher: this.teacher?.toObject(),
+            category: this.category?.toObject(),
             sessions: this.sessions,
+            comments: this.comments,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };
