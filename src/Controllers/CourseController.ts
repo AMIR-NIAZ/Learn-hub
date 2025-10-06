@@ -62,6 +62,7 @@ export class CourseController {
 
     static async getCourseById(req: Request, res: Response) {
         const { id } = req.params;
+        let isUserRegisterToThisCourse = null;
         if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
         const mainCourse = await Course.findById(id)
             .populate("teacher")
@@ -76,10 +77,14 @@ export class CourseController {
         if (!mainCourse) throw new AppError("Course not found", 404);
         const countUser = await CourseUser.countDocuments({course: mainCourse._id});
         const DtoCourse = CourseDTO.fromCourse(mainCourse);
-        const isUserRegisterToThisCourse = !!(await CourseUser.find({
-            user: (req as any).user._id,
-            course: mainCourse._id
-        }));
+        if (((req as any).user)) {  
+            isUserRegisterToThisCourse = !!(await CourseUser.find({
+                user: (req as any).user._id,
+                course: mainCourse._id
+            }));
+        } else {
+            isUserRegisterToThisCourse = false;
+        }
         return res.status(201).json({ success: true, course: DtoCourse.toObject(), countStudent: countUser, isUserRegisterToThisCourse });
     }
 

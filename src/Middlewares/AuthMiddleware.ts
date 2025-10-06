@@ -4,6 +4,17 @@ import { verifyToken } from "../Utils/CreateToken";
 import User from "../Models/User";
 
 export class AuthMiddleware {
+    static async getUser(req: Request, res: Response, next: NextFunction) {
+        const authHeader = req.headers['authorization'];
+        if (typeof authHeader !== "string" || !authHeader.startsWith("Bearer ")) return next();
+        const token = authHeader.split(" ")[1]
+        if (!token) return next();
+        let tokenVrify = await verifyToken(token)
+        let user = await User.findById(tokenVrify.id).lean()
+        if (user) (req as any).user = user
+        next()
+    }
+
 
     static async isUser(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers['authorization'];
@@ -39,7 +50,7 @@ export class AuthMiddleware {
         next();
     }
 
-        static async isTeacherORAdmin(req: Request, res: Response, next: NextFunction) {
+    static async isTeacherORAdmin(req: Request, res: Response, next: NextFunction) {
         const user = (req as any).user;
         if (!user) {
             throw new AppError("User not authenticated", 401);

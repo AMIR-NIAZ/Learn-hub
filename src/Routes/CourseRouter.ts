@@ -16,6 +16,7 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(CourseController.getAllCourse)
         );
         this.router.get("/:id",
+            this.handleErrors(AuthMiddleware.getUser),
             this.handleErrors(CourseController.getCourseById)
         );
         this.router.put("/:id",
