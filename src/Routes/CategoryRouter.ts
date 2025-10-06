@@ -9,6 +9,12 @@ export class CategoryRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(CategoryController.CreateCategory)
         );
+        this.router.get("/:href",
+            this.handleErrors(CategoryController.getCourseByCategory)
+        );
+        this.router.get("/",
+            this.handleErrors(CategoryController.getAllCategory)
+        );
         this.router.put("/update/:id",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(AuthMiddleware.isAdmin),

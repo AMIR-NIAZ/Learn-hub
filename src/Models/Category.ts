@@ -13,5 +13,11 @@ const CategorySchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+CategorySchema.virtual("courses", {
+    ref: "Course",
+    localField: "_id",
+    foreignField: "category"
+});
+
 const Category = mongoose.model("Category", CategorySchema)
 export default Category
