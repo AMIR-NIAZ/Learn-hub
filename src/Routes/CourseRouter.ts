@@ -41,7 +41,7 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isTeacher),
             this.handleErrors(CourseController.DeleteSession)
         );
-        this.router.post("/:href/comment",
+        this.router.post("/:id/comment",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(CourseController.CreateComment)
         );
@@ -60,7 +60,7 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(CourseController.deleteComment)
         );
-        this.router.get("/:href/comment",
+        this.router.get("/:id/comment",
             this.handleErrors(CourseController.getAllCommentByCourse)
         );
         this.router.post("/register/:id",

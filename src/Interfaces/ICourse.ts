@@ -12,7 +12,6 @@ export interface ICourse extends Document {
     status: string;
     time: number;
     lastUpdate: string;
-    href: string;
     teacher?: Types.ObjectId | IUser;
     category?: Types.ObjectId | ICategory;
     sessions?: ISession[];

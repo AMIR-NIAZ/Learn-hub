@@ -36,13 +36,6 @@ export class CourseValidator extends ParentValidator {
                 optional: false,
                 convert: true
             },
-            href: {
-                type: "string",
-                min: 5,
-                max: 255,
-                optional: false,
-                pattern: /^[a-zA-Z0-9_-]+$/,
-            },
             category: {
                 type: "string",
                 min: 24,

@@ -21,10 +21,9 @@ export class CourseController {
             description,
             price,
             status,
-            href,
             category
         } = req.body;
-        const avatar = (req as any).file.filename;
+        const avatar = (req as any).file?.filename;
         if (!avatar) throw new AppError("Avatar is required", 400);
         const categoryExists = await Category.findById(category).lean();
         if (!categoryExists) throw new AppError("Category not found", 404);
@@ -38,7 +37,6 @@ export class CourseController {
             status,
             time: 0,
             lastUpdate: persianDate,
-            href,
             category,
             teacher: (req as any).user._id,
             avatar
@@ -52,7 +50,9 @@ export class CourseController {
     }
 
     static async getAllCourse(req: Request, res: Response) {
-        const courses = await Course.find({}).populate("teacher", "name");
+        const courses = await Course.find({})
+            .populate("teacher", "name")
+            .populate("category", "title");
         const DtoCourses = CourseDTO.fromCourses(courses);
         res.status(200).json({
             success: true,
@@ -75,9 +75,9 @@ export class CourseController {
             })
             .populate("sessions");
         if (!mainCourse) throw new AppError("Course not found", 404);
-        const countUser = await CourseUser.countDocuments({course: mainCourse._id});
+        const countUser = await CourseUser.countDocuments({ course: mainCourse._id });
         const DtoCourse = CourseDTO.fromCourse(mainCourse);
-        if (((req as any).user)) {  
+        if (((req as any).user)) {
             isUserRegisterToThisCourse = !!(await CourseUser.find({
                 user: (req as any).user._id,
                 course: mainCourse._id
@@ -95,7 +95,7 @@ export class CourseController {
         if (!mainCourse) {
             throw new AppError("Course not found", 404);
         }
-        const teacherId = (mainCourse.teacher as any)._id.toString();
+        const teacherId = mainCourse.teacher._id.toString();
         const userId = (req as any).user._id.toString();
         if ((req as any).user.role !== "ADMIN") {
             if (teacherId !== userId) throw new AppError("Teacher cannot delete this course", 403);
@@ -115,7 +115,6 @@ export class CourseController {
             description,
             price,
             status,
-            href,
             category
         } = req.body;
         await CourseController.ValidationCourse(req)
@@ -129,12 +128,14 @@ export class CourseController {
         if ((req as any).user.role !== "ADMIN") {
             if (teacherId !== userId) throw new AppError("Teacher cannot update this course", 403);
         }
+        const gregorianDate = new Date();
+        const persianDate = moment(gregorianDate).format("jYYYY/jMM/jDD");
         await mainCourse.updateOne({
             title,
             description,
             price,
             status,
-            href,
+            lastUpdate: persianDate,
             category
         })
         return res.status(200).json({
@@ -198,11 +199,14 @@ export class CourseController {
 
     public static async CreateComment(req: Request, res: Response) {
         const { body, score, parent } = req.body;
-        const { href } = req.params;
+        const { id } = req.params;
+        const gregorianDate = new Date();
+        const persianDate = moment(gregorianDate).format("jYYYY/jMM/jDD");
+        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
         if (parent) {
             if (!isValidObjectId(parent)) throw new AppError("parent is not valid", 422);
         }
-        const course = await Course.findOne({ href: href });
+        const course = await Course.findById(id);
         if (!course) throw new AppError("Course not found", 404);
         CourseController.ValidationComment({ body, score, parent });
         const comment = await Comment.create({
@@ -211,6 +215,7 @@ export class CourseController {
             course: course._id,
             user: (req as any).user._id,
             parent: parent || null,
+            date: persianDate
         });
         res.status(201).json({ success: true, comment });
     }
@@ -226,7 +231,7 @@ export class CourseController {
     public static async GetAllNotActiveComments(req: Request, res: Response) {
         const comments = await Comment.find({ isActive: false })
             .populate("user", "name avatar")
-            .populate("course", "title href")
+            .populate("course", "title")
             .populate("parent", "body")
             .sort({ createdAt: -1 })
         res.status(200).json({
@@ -261,9 +266,12 @@ export class CourseController {
     }
 
     public static async getAllCommentByCourse(req: Request, res: Response) {
-        const { href } = req.params;
-        const comments = await Course.findOne({ href }).populate("comments").lean();
-        if (!comments) throw new AppError("comment not found", 404);
+        const { id } = req.params;
+        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
+        const comments = await Course.findById(id)
+            .populate({ path: "comments", populate: { path: "user", select: "name" } })
+            .lean();
+        if (!comments) throw new AppError("comment is not find", 404);
         return res.status(200).json({ success: true, data: comments });
     }
 

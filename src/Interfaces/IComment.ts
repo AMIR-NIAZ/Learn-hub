@@ -8,4 +8,5 @@ export interface IComment extends BaseEntity {
     isActive: boolean;
     score: number;
     parent?: Types.ObjectId | null;
+    date: string;
 }

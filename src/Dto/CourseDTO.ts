@@ -15,7 +15,6 @@ export class CourseDTO extends BaseDTO<ICourse> {
     public status: string;
     public time: number;
     public lastUpdate: string;
-    public href: string;
     public teacher?: UserDTO;
     public category?: CategoryDTO;
     public sessions?: ISession[] | undefined;
@@ -30,7 +29,6 @@ export class CourseDTO extends BaseDTO<ICourse> {
         this.status = course.status;
         this.time = course.time;
         this.lastUpdate = course.lastUpdate;
-        this.href = course.href;
         this.teacher = UserDTO.fromUser(course.teacher as IUser);
         this.category = CategoryDTO.fromcategory(course.category as ICategory);
         this.sessions = course.sessions;
@@ -55,7 +53,6 @@ export class CourseDTO extends BaseDTO<ICourse> {
             status: this.status,
             time: this.time,
             lastUpdate: this.lastUpdate,
-            href: this.href,
             teacher: this.teacher?.toObject(),
             category: this.category?.toObject(),
             sessions: this.sessions,

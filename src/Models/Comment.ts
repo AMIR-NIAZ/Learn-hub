@@ -5,6 +5,10 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    date: {
+        type: String,
+        required: true
+    },
     course: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",

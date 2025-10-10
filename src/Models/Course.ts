@@ -29,10 +29,6 @@ const CourseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    href: {
-        type: String,
-        required: true
-    },
     teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
