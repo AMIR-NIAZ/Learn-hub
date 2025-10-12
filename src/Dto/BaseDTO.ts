@@ -11,6 +11,5 @@ export abstract class BaseDTO<T> {
     this.updatedAt = entity.updatedAt;
   }
 
-  abstract toObject(): object;
-  abstract toJSON(): string;
+  abstract toDTO(): object;
 }
