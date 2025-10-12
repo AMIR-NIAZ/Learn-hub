@@ -1,36 +1,36 @@
 import { ICategory } from '../Interfaces/ICategory';
 import { BaseDTO } from './BaseDTO';
 
-export class categoryDTO extends BaseDTO <ICategory>{
-    public title: string;
-    public name: string;
-    constructor(category: ICategory) {
+export class CategoryDTO extends BaseDTO<ICategory> {
+    constructor(public readonly category: ICategory) {
         super(category);
-        this.title = category.title;
-        this.name = category.name;
     }
 
-    static fromcategory(category: ICategory): categoryDTO {
-        return new categoryDTO(category);
-    }
+    toDTO() {
+        const {
+            _id,
+            title,
+            name,
+            createdAt,
+            updatedAt
+        } = this.category;
 
-    static fromcategorys(categorys: ICategory[]): categoryDTO[] {
-        return categorys.map(category => new categoryDTO(category));
-    }
-
-    toObject(): object {
         return {
-            id: this.id,
-            title: this.title,
-            name: this.name,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            id: _id,
+            title,
+            name,
+            createdAt,
+            updatedAt
         };
     }
 
-    toJSON(): string {
-        return JSON.stringify(this.toObject());
+    static fromCategory(category: ICategory) {
+        return new CategoryDTO(category).toDTO();
+    }
+
+    static fromCategories(categories: ICategory[]) {
+        return categories.map(category => new CategoryDTO(category).toDTO());
     }
 }
 
-export default categoryDTO;
+export default CategoryDTO;

@@ -10,8 +10,8 @@ export class CategoryController {
     static async getAllCategory(req: Request, res: Response) {
         const allCategory = await Category.find({});
         if (!allCategory) throw new AppError("Category not find", 404);
-        let categoryDto = categoryDTO.fromcategorys(allCategory);
-        return res.status(200).json({ success: true, Category: categoryDto.map(dto => dto.toObject())});
+        let categoryDto = categoryDTO.fromCategories(allCategory);
+        return res.status(200).json({ success: true, Category: categoryDto });
     }
 
     static async getCourseByCategory(req: Request, res: Response) {
