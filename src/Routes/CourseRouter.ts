@@ -60,9 +60,6 @@ export class CourseRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(CourseController.deleteComment)
         );
-        this.router.get("/:id/comment",
-            this.handleErrors(CourseController.getAllCommentByCourse)
-        );
         this.router.post("/register/:id",
             this.handleErrors(AuthMiddleware.isUser),
             this.handleErrors(CourseController.registerUser)

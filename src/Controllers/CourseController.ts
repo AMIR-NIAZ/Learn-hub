@@ -13,6 +13,7 @@ import path from "path";
 import { CommentValidator } from "../Validators/CommentValidator";
 import Comment from "../Models/Comment";
 import CourseUser from "../Models/CourseUser";
+import { CommentDTO} from "../Dto/CommentDTO";
 
 export class CourseController {
     static async CreateCourse(req: Request, res: Response) {
@@ -46,7 +47,7 @@ export class CourseController {
             throw new AppError("Course not found", 404);
         }
         const DtoCourse = CourseDTO.fromCourse(mainCourse);
-        return res.status(201).json({ success: true, course: DtoCourse.toObject() });
+        return res.status(201).json({ success: true, course: DtoCourse });
     }
 
     static async getAllCourse(req: Request, res: Response) {
@@ -56,7 +57,7 @@ export class CourseController {
         const DtoCourses = CourseDTO.fromCourses(courses);
         res.status(200).json({
             success: true,
-            courses: DtoCourses.map(course => course.toObject())
+            courses: DtoCourses
         });
     }
 
@@ -85,7 +86,7 @@ export class CourseController {
         } else {
             isUserRegisterToThisCourse = false;
         }
-        return res.status(201).json({ success: true, course: DtoCourse.toObject(), countStudent: countUser, isUserRegisterToThisCourse });
+        return res.status(201).json({ success: true, course: DtoCourse, countStudent: countUser, isUserRegisterToThisCourse });
     }
 
     static async DeleteCourse(req: Request, res: Response) {
@@ -217,7 +218,8 @@ export class CourseController {
             parent: parent || null,
             date: persianDate
         });
-        res.status(201).json({ success: true, comment });
+        let dto = CommentDTO.fromComment(comment);
+        res.status(201).json({ success: true, comment: dto});
     }
 
     private static async UpdateCourseTime(id: string, time: number) {
@@ -234,10 +236,11 @@ export class CourseController {
             .populate("course", "title")
             .populate("parent", "body")
             .sort({ createdAt: -1 })
+        let dto = CommentDTO.fromComments(comments);
         res.status(200).json({
             success: true,
             count: comments.length,
-            comments,
+            comments: dto,
         });
     }
 
@@ -263,16 +266,6 @@ export class CourseController {
             success: true,
             message: "Comment deleted successfully",
         });
-    }
-
-    public static async getAllCommentByCourse(req: Request, res: Response) {
-        const { id } = req.params;
-        if (!isValidObjectId(id)) throw new AppError("id is not true", 422);
-        const comments = await Course.findById(id)
-            .populate({ path: "comments", populate: { path: "user", select: "name" } })
-            .lean();
-        if (!comments) throw new AppError("comment is not find", 404);
-        return res.status(200).json({ success: true, data: comments });
     }
 
     public static async registerUser(req: Request, res: Response) {
