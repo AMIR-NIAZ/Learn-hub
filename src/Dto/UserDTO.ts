@@ -2,38 +2,29 @@ import { IUser } from '../Interfaces/IUser';
 import { BaseDTO } from './BaseDTO';
 
 export class UserDTO extends BaseDTO<IUser> {
-    public name: string;
-    public email: string;
-    public role: string;
-
-    constructor(user: IUser) {
+    constructor(public readonly user: IUser) {
         super(user);
-        this.name = user.name;
-        this.email = user.email;
-        this.role = user.role;
     }
 
-    static fromUser(user: IUser): UserDTO {
-        return new UserDTO(user);
-    }
+    toDTO() {
+        const { _id, name, email, role, createdAt, updatedAt } = this.user;
 
-    static fromUsers(users: IUser[]): UserDTO[] {
-        return users.map(user => new UserDTO(user));
-    }
-
-    toObject(): object {
         return {
-            id: this.id,
-            name: this.name,
-            email: this.email,
-            role: this.role,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            id: _id,
+            name,
+            email,
+            role,
+            createdAt,
+            updatedAt
         };
     }
 
-    toJSON(): string {
-        return JSON.stringify(this.toObject());
+    static fromUser(user: IUser) {
+        return new UserDTO(user).toDTO();
+    }
+
+    static fromUsers(users: IUser[]) {
+        return users.map(user => new UserDTO(user).toDTO());
     }
 }
 

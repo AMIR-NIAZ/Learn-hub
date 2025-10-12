@@ -24,7 +24,7 @@ export class UserController {
             success: true,
             message: "User registered successfully",
             data: {
-                user: userResource.toObject(),
+                user: userResource,
                 token
             }
         });
@@ -45,7 +45,7 @@ export class UserController {
             success: true,
             message: "User logined successfully",
             data: {
-                user: userResource.toObject(),
+                user: userResource,
                 token
             }
         });
@@ -75,14 +75,14 @@ export class UserController {
         const bannedIds = await Ban.find().distinct('email');
         const allUser = await User.find({ email: { $nin: bannedIds } });
         const userDtos = UserDTO.fromUsers(allUser);
-        return res.status(200).json({ success: true, users: userDtos.map(u => u.toObject()) })
+        return res.status(200).json({ success: true, users: userDtos });
     }
 
     static async getOneUser(req: Request, res: Response) {
         const id = req.params.id;
         const user = await User.findByValidId(id!);
         const userDto = UserDTO.fromUser(user)
-        return res.status(200).json({ user: userDto.toObject() })
+        return res.status(200).json({ user: userDto })
     }
 
     static async addAdmin(req: any, res: Response) {
