@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import categoryDTO from "../Dto/CategoryDTO";
-import { ICategory } from "../Interfaces/ICategory";
 import Category from "../Models/Category";
 import { CategoryValidator } from "../Validators/ CategoryValidator";
 import { AppError } from "../Utils/AppError";
