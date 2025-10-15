@@ -6,6 +6,7 @@ import { Logger } from "./Utils/logger";
 import { CategoryRouter } from "./Routes/CategoryRouter";
 import path from "path";
 import { CourseRouter } from "./Routes/CourseRouter";
+import { TicketRouter } from "./Routes/TicketRouter";
 
 export class App {
     public app: Application
@@ -28,9 +29,11 @@ export class App {
         let userInstans = new UserRouter();
         let categoryInstans = new CategoryRouter();
         let courseInstans = new CourseRouter();
+        let TicketInstans = new TicketRouter();
         this.app.use("/api/user/", userInstans.getRouter());
         this.app.use("/api/category/", categoryInstans.getRouter());
         this.app.use("/api/course/", courseInstans.getRouter());
+        this.app.use("/api/ticket/", TicketInstans.getRouter());
     }
 
     private ErrorHandling () {
