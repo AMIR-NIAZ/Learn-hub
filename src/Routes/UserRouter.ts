@@ -1,8 +1,15 @@
 import { BaseRouter } from "./BaseRouter";
 import { UserController } from "../Controllers/UserController";
 import { AuthMiddleware } from "../Middlewares/AuthMiddleware";
+import { OtpController } from "../Controllers/OtpController";
 export class UserRouter extends BaseRouter {
     protected initRoutes(): void {
+        this.router.post("/send-otp",
+            this.handleErrors(OtpController.sendCode)
+        );
+        this.router.post("/verify-otp",
+            this.handleErrors(OtpController.verifyOtp)
+        );
         this.router.post("/register",
             this.handleErrors(UserController.registerUser)
         );
