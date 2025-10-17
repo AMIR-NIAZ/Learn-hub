@@ -6,15 +6,16 @@ import { CreateToken } from "../Utils/CreateToken";
 import { AppError } from "../Utils/AppError";
 import UserDTO from "../Dto/UserDTO";
 import Ban from "../Models/BanUser";
+import Otp from "../Models/Otp";
 
 export class UserController {
     static async registerUser(req: Request, res: Response, next: NextFunction) {
         const { name, email, password } = req.body;
-        await UserController.Validation(req)
-        const isBan = await Ban.exists({ email });
-        if (isBan) throw new AppError("user is ban", 403)
+        await UserController.Validation(req);
         const existingUser = await User.findOne({ email });
         if (existingUser) throw new AppError("Email already exist", 409);
+        const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
+        if (!otpDoc || otpDoc.verified == false) throw new AppError("Email not verified", 403);
         const userCount = await User.countDocuments();
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ name, email, password: hashedPassword, role: userCount > 0 ? "USER" : "ADMIN" });
