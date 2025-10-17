@@ -11,6 +11,9 @@ build/
 out/
 lib/
 
+# Environment files
+.env
+
 # TypeScript
 *.tsbuildinfo
 
