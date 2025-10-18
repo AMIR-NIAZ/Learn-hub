@@ -21,7 +21,7 @@ const OtpSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            expires: 15000,
+            expires: 5000,
         },
     },  
 );
