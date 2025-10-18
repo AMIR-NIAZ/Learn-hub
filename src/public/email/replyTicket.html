@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Support Ticket Reply</title>
+
+  <style>
+    body,table,td,a{ -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    table,td{ mso-table-lspace:0pt; mso-table-rspace:0pt; }
+    img{ -ms-interpolation-mode:bicubic; }
+    body{ margin:0; padding:0; width:100% !important; background-color:#f4f6f8; font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color:#222; line-height:1.5; }
+
+    .email-wrapper{ width:100%; background:#f4f6f8; padding:30px 16px; -webkit-font-smoothing:antialiased; }
+    .email-content{ max-width:680px; margin:0 auto; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(20,30,50,0.06); }
+
+    .header{ padding:20px 28px; background:linear-gradient(90deg,#0d6efd 0%, #0056d6 100%); color:#fff; display:flex; align-items:center; gap:12px; }
+    .logo { width:48px; height:48px; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; color:#0d6efd; }
+    .brand-title{ font-size:18px; font-weight:600; }
+
+    .body{ padding:26px 28px; }
+    .greeting{ font-size:16px; margin-bottom:8px; }
+    .intro{ color:#495057; margin-bottom:16px; }
+    .ticket-card{ border:1px solid #eef2f6; border-radius:10px; padding:16px; background:#fbfdff; margin-bottom:18px; }
+    .ticket-subject{ font-size:15px; font-weight:600; color:#0b5ed7; margin-bottom:6px; }
+    .ticket-meta{ font-size:13px; color:#6c757d; margin-bottom:10px; }
+
+    .reply-box{ background:#fff; border-radius:8px; padding:14px; border:1px solid #e6eefc; color:#1f2937; white-space:pre-wrap; }
+
+    .actions{ display:flex; gap:12px; margin-top:18px; flex-wrap:wrap; }
+    .btn{ display:inline-block; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; }
+    .btn-primary{ background:#0d6efd; color:#fff; }
+    .btn-outline{ border:1px solid #ced4da; color:#212529; background:transparent; }
+
+    .footer{ padding:18px 28px; font-size:13px; color:#6c757d; border-top:1px solid #f1f3f5; background:#fbfdff; display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; }
+    .small{ font-size:12px; color:#98a0ab; }
+
+    @media (max-width:520px){
+      .header, .body, .footer { padding-left:16px; padding-right:16px; }
+      .actions{ flex-direction:column; }
+      .logo{ width:40px; height:40px; font-size:14px; }
+      .brand-title{ font-size:16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper" role="article" aria-roledescription="email">
+    <div class="email-content" role="document">
+      <div class="header" role="banner">
+        <div class="logo" aria-hidden="true">LH</div>
+        <div>
+          <div class="brand-title">LearnHub Support</div>
+          <div style="font-size:12px; opacity:0.9;">Customer Service & Ticket Assistance</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="greeting">Hi {{userName}},</div>
+        <div class="intro">
+          Our support team has replied to your ticket. You can see the response below or open the ticket to continue the conversation.
+        </div>
+
+        <div class="ticket-card" aria-labelledby="ticket-subject">
+          <div id="ticket-subject" class="ticket-subject">{{ticketSubject}}</div>
+          <div class="ticket-meta">Ticket ID: #{{ticketId}} • Created on {{ticketCreatedAt}}</div>
+
+          <div style="margin-top:8px;">
+            <div style="font-size:13px; color:#495057; margin-bottom:8px;">Support Reply:</div>
+            <div class="reply-box" role="article" aria-label="Support reply">
+              {{replyMessage}}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer" role="contentinfo">
+        <div class="small">This is an automated message — please do not reply directly.</div>
+        <div class="small">© {{year}} LearnHub</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

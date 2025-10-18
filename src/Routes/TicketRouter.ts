@@ -27,5 +27,10 @@ export class TicketRouter extends BaseRouter {
             this.handleErrors(AuthMiddleware.isAdmin),
             this.handleErrors(TicketController.deleteTicket)
         );
+        this.router.post("/reply/:id",
+            this.handleErrors(AuthMiddleware.isUser),
+            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(TicketController.addTicketReply)
+        );
     }
 }
