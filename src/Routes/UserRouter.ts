@@ -2,6 +2,7 @@ import { BaseRouter } from "./BaseRouter";
 import { UserController } from "../Controllers/UserController";
 import { AuthMiddleware } from "../Middlewares/AuthMiddleware";
 import { OtpController } from "../Controllers/OtpController";
+import { Role } from "../Enums/RoleEnum";
 export class UserRouter extends BaseRouter {
     protected initRoutes(): void {
         this.router.post("/send-otp",
@@ -20,26 +21,22 @@ export class UserRouter extends BaseRouter {
             this.handleErrors(UserController.updateUser)
         )
         this.router.get("/get",
-            this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(AuthMiddleware.checkRole(`${Role.ADMIN}`)),
             this.handleErrors(UserController.getAll)
         );
         this.router.get("/get/:id",
             this.handleErrors(UserController.getOneUser)
         );
         this.router.post("/ban/:id",
-            this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(AuthMiddleware.checkRole(`${Role.ADMIN}`)),
             this.handleErrors(UserController.banUser)
         );
         this.router.get("/admin/:id",
-            this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(AuthMiddleware.checkRole(`${Role.ADMIN}`)),
             this.handleErrors(UserController.addAdmin)
         );
         this.router.get("/teacher/:id",
-            this.handleErrors(AuthMiddleware.isUser),
-            this.handleErrors(AuthMiddleware.isAdmin),
+            this.handleErrors(AuthMiddleware.checkRole(`${Role.ADMIN}`)),
             this.handleErrors(UserController.addTeacher)
         );
     }
